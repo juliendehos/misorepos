@@ -1,0 +1,62 @@
+cabal-version:    3.0
+name:             misorepos
+version:          0.1
+
+common options
+  default-language:
+    GHC2021
+  default-extensions:
+    CPP
+    TemplateHaskell 
+
+  if arch(wasm32)
+    ghc-options:
+      -Wall -O2 -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start" -ddump-splices
+    cpp-options:
+      -DWASM
+  else
+    ghc-options:
+      -Wall -O2 -ddump-splices
+
+  build-depends:
+    aeson, 
+    base, 
+    miso, 
+    network-uri,
+    servant, 
+    servant-miso-router,
+    text
+
+executable app
+  import:
+    options
+  hs-source-dirs:
+    src
+  main-is:
+    app.hs
+  other-modules:
+    App.Component
+    App.Model
+    Gitlab.Api
+    Gitlab.Repo
+    Gitlab.User
+
+executable test-gitlab
+  import:
+    options
+  hs-source-dirs:
+    src
+  main-is:
+    test-gitlab.hs
+  other-modules:
+    Gitlab.Api
+    Gitlab.Repo
+    Gitlab.User
+  build-depends:
+    http-client,
+    http-client-tls,
+    servant, 
+    servant-miso-router,
+    servant-client, 
+    servant-server
+
