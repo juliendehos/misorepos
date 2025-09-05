@@ -25,6 +25,7 @@ common options
     network-uri,
     servant, 
     servant-miso-router,
+    servant-miso-client,
     text
 
 executable app
@@ -40,23 +41,4 @@ executable app
     Gitlab.Api
     Gitlab.Repo
     Gitlab.User
-
-executable test-gitlab
-  import:
-    options
-  hs-source-dirs:
-    src
-  main-is:
-    test-gitlab.hs
-  other-modules:
-    Gitlab.Api
-    Gitlab.Repo
-    Gitlab.User
-  build-depends:
-    http-client,
-    http-client-tls,
-    servant, 
-    servant-miso-router,
-    servant-client, 
-    servant-server
 

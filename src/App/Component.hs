@@ -1,19 +1,40 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module App.Component (mkComponent) where
 
 import Data.Maybe (fromMaybe)
+import Data.Proxy
 import Miso
 import Miso.Lens
 import Miso.Html.Element as H
 import Miso.Html.Event as E
 import Miso.Html.Property as P
+import Servant.API -- hiding (URI)
+import Servant.Miso.Client
 
 import App.Model
 import Gitlab.Api
 import Gitlab.Repo as Repo
 import Gitlab.User as User
+
+-------------------------------------------------------------------------------
+-- component
+-------------------------------------------------------------------------------
+
+type MyComponent = App Model Action
+
+mkComponent ::MyComponent
+mkComponent = component emptyModel updateModel viewModel
+
+-------------------------------------------------------------------------------
+-- routing
+-------------------------------------------------------------------------------
+
+-- gitlabUsers :: MisoString -> ([User] -> Action) -> (MisoString -> Action) -> Transition Model Action
+-- gitlabRepos :: MisoString -> ([Repo] -> Action) -> (MisoString -> Action) -> Transition Model Action
+gitlabUsers :<|> gitlabRepos = toClient (Proxy @MyComponent) (Proxy @GitlabRoutes)
 
 -------------------------------------------------------------------------------
 -- actions
@@ -44,11 +65,20 @@ updateModel (ActionInputUsers str) =
 updateModel ActionAskGitlab = do
   modelError .= ""
   inputUsers <- use modelInputUsers
+
+  -- TODO
+  gitlabUsers ActionSetGitlabUsers ActionError
+  -- gitlabUsers inputUsers ActionSetGitlabUsers ActionError
+  pure ()
+
+
+{-
   let str = fromMisoString inputUsers
       headers = [("Content-Type", "application/json")]
   io_ $ consoleLog $ mkGitlabUrl $ uriUsers str
   getJSON (mkGitlabUrl $ uriUsers str) headers ActionSetGitlabUsers ActionError
   getJSON (mkGitlabUrl $ uriRepos str) headers ActionSetGitlabRepos ActionError
+-}
 
 updateModel (ActionSetGitlabUsers users) =
   modelUsers .= users
@@ -98,11 +128,4 @@ fmtRepos repos =
         , p_ [] [ text ("description: " <> fromMaybe "" (description repo)) ]
         , p_ [] [ text ("last update: " <> last_activity_at repo) ]
         ] 
-
--------------------------------------------------------------------------------
--- component
--------------------------------------------------------------------------------
-
-mkComponent :: App Model Action
-mkComponent = component emptyModel updateModel viewModel
 
