@@ -11,7 +11,7 @@ import Miso.Lens
 import Miso.Html.Element as H
 import Miso.Html.Event as E
 import Miso.Html.Property as P
-import Servant.API -- hiding (URI)
+import Servant.API
 import Servant.Miso.Client
 
 import App.Model
@@ -65,12 +65,10 @@ updateModel (ActionInputUsers str) =
 updateModel ActionAskGitlab = do
   modelError .= ""
   inputUsers <- use modelInputUsers
-
   -- TODO
-  gitlabUsers ActionSetGitlabUsers ActionError
   -- gitlabUsers inputUsers ActionSetGitlabUsers ActionError
+  -- gitlabRepos inputUsers ActionSetGitlabUsers ActionError
   pure ()
-
 
 {-
   let str = fromMisoString inputUsers
