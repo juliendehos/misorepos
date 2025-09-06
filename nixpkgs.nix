@@ -8,8 +8,8 @@ let
   };
 
   servant-miso-client-src = fetchTarball {
-    url = https://github.com/haskell-miso/servant-miso-client/archive/9e8986a094c5a21e221e6afc528392b6a82bac66.tar.gz;
-    sha256 = "sha256:0s9nnvch8w5gh8frag5wc8rzv5lv0ja79bbb5ci9nhlmfk800ixl";
+    url = https://github.com/haskell-miso/servant-miso-client/archive/6178a50a94c6c8cbb0faaf6c78203ceae272cd3f.tar.gz;
+    sha256 = "sha256:17i9m2iz7g3qw54ian9678zyzi110m92c2gp046jv0wif6z1bk9q";
     # should match cabal.project
   };
 
