@@ -9,17 +9,14 @@ import Gitlab.Repo
 import Gitlab.User
 
 type UserRoute
-  = "https://gitlab.com"
-  :> "api"
+  = "api"
   :> "v4"
   :> "users"
   :> QueryParam "username" MisoString
-  -- :> QueryParam' '[Required] "username" MisoString     -- TODO
   :> Get '[JSON] [User]
 
 type RepoRoute
-  = "https://gitlab.com"
-  :> "api"
+  = "api"
   :> "v4"
   :> "users"
   :> Capture "username" MisoString

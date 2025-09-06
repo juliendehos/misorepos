@@ -2,20 +2,20 @@
 let
 
   miso-src = fetchTarball {
-    url = https://github.com/dmjio/miso/archive/d45d0e9a5a17d40f44f78e18784d6eb38e8785d3.tar.gz;
-    sha256 = "sha256:0pnxs00d65z49jl9gv7sfps6q7hlagx7w2408v9cdi1d0xw3py4n";
+    url = https://github.com/dmjio/miso/archive/d9ba465e9210d35208c4a2fb82287f0531157425.tar.gz;
+    sha256 = "sha256:1056x2f9gc16ss4ldyw0a04f3547vrjhwvpdnk994ig10d21kn2z";
     # should match cabal.project
   };
 
-  servant-miso-router-src = fetchTarball {
-    url = https://github.com/haskell-miso/servant-miso-router/archive/0c828e0ba30ee7a446ce8999288b32b7f6425dd1.tar.gz;
-    sha256 = "sha256:01n0nhcmk0hqhcnmabis00w3gimczkm3ps046ib32d52pmwj2nfr";
+  servant-miso-client-src = fetchTarball {
+    url = https://github.com/haskell-miso/servant-miso-client/archive/9e8986a094c5a21e221e6afc528392b6a82bac66.tar.gz;
+    sha256 = "sha256:0s9nnvch8w5gh8frag5wc8rzv5lv0ja79bbb5ci9nhlmfk800ixl";
     # should match cabal.project
   };
 
-  servant-miso-html-src = fetchTarball {
-    url = https://github.com/haskell-miso/servant-miso-html/archive/00781d1920795b67e0476b67ed6840c388f29810.tar.gz;
-    sha256 = "sha256:0w3i7wk05n9zk0hxl3l0076zsx2nq64vdfg467phbyfh4v0yb0vm";
+  servant-src = fetchTarball {
+    url = https://github.com/haskell-servant/servant/archive/refs/tags/servant-0.20.3.0.tar.gz;
+    sha256 = "sha256:0cx37nrqlylmsi5f75mqs8vlqnsn41qn94k3d9zl4lyczvmm8sfd";
     # should match cabal.project
   };
 
@@ -24,8 +24,8 @@ let
       haskellPackages = pkgs.haskellPackages.override {
         overrides = self: super: rec {
           miso = self.callCabal2nixWithOptions "miso" miso-src "-ftemplate-haskell" {};
-          servant-miso-router = self.callCabal2nix "servant-miso-router" servant-miso-router-src {};
-          servant-miso-html = self.callCabal2nix "servant-miso-html" servant-miso-html-src {};
+          servant-miso-client = self.callCabal2nix "servant-miso-client" servant-miso-client-src {};
+          servant = self.callCabal2nix "servant" "${servant-src}/servant" {};
         };
       };
     };

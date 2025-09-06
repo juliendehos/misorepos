@@ -32,9 +32,12 @@ mkComponent = component emptyModel updateModel viewModel
 -- routing
 -------------------------------------------------------------------------------
 
--- gitlabUsers :: MisoString -> ([User] -> Action) -> (MisoString -> Action) -> Transition Model Action
--- gitlabRepos :: MisoString -> ([Repo] -> Action) -> (MisoString -> Action) -> Transition Model Action
-gitlabUsers :<|> gitlabRepos = toClient (Proxy @MyComponent) (Proxy @GitlabRoutes)
+baseUrl :: MisoString
+baseUrl = "https://gitlab.com"
+
+gitlabUsers :: Maybe MisoString -> ([User] -> Action) -> (MisoString -> Action) -> Transition Model Action
+gitlabRepos :: MisoString -> ([Repo] -> Action) -> (MisoString -> Action) -> Transition Model Action
+gitlabUsers :<|> gitlabRepos = toClient baseUrl (Proxy @MyComponent) (Proxy @GitlabRoutes)
 
 -------------------------------------------------------------------------------
 -- actions
@@ -65,18 +68,8 @@ updateModel (ActionInputUsers str) =
 updateModel ActionAskGitlab = do
   modelError .= ""
   inputUsers <- use modelInputUsers
-  -- TODO
-  -- gitlabUsers inputUsers ActionSetGitlabUsers ActionError
-  -- gitlabRepos inputUsers ActionSetGitlabUsers ActionError
-  pure ()
-
-{-
-  let str = fromMisoString inputUsers
-      headers = [("Content-Type", "application/json")]
-  io_ $ consoleLog $ mkGitlabUrl $ uriUsers str
-  getJSON (mkGitlabUrl $ uriUsers str) headers ActionSetGitlabUsers ActionError
-  getJSON (mkGitlabUrl $ uriRepos str) headers ActionSetGitlabRepos ActionError
--}
+  gitlabUsers (Just inputUsers) ActionSetGitlabUsers ActionError
+  gitlabRepos inputUsers ActionSetGitlabRepos ActionError
 
 updateModel (ActionSetGitlabUsers users) =
   modelUsers .= users

@@ -22,11 +22,8 @@ common options
     aeson, 
     base, 
     miso, 
-    network-uri,
-    servant, 
-    servant-miso-router,
-    servant-miso-client,
-    text
+    servant,
+    servant-miso-client
 
 executable app
   import:
