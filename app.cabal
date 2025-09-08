@@ -21,6 +21,8 @@ common options
   build-depends:
     aeson, 
     base, 
+    -- TODO
+    jsaddle,
     miso, 
     servant,
     servant-miso-client

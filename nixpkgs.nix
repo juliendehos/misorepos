@@ -2,14 +2,14 @@
 let
 
   miso-src = fetchTarball {
-    url = https://github.com/dmjio/miso/archive/d9ba465e9210d35208c4a2fb82287f0531157425.tar.gz;
-    sha256 = "sha256:1056x2f9gc16ss4ldyw0a04f3547vrjhwvpdnk994ig10d21kn2z";
+    url = https://github.com/dmjio/miso/archive/fddd4c95866523cbb97164c6d6193b89aa4c94be.tar.gz;
+    sha256 = "sha256:0q0xmdrnh03b89v3jr07b9jsx6a4j6znmj9v92iz1c7a5qm44g66";
     # should match cabal.project
   };
 
   servant-miso-client-src = fetchTarball {
-    url = https://github.com/haskell-miso/servant-miso-client/archive/4769567315a4b16df3b821f715ef8deb971d35f1.tar.gz;
-    sha256 = "sha256:17i9m2iz7g3qw54ian9678zyzi110m92c2gp046jv0wif6z1bk9q";
+    url = https://github.com/haskell-miso/servant-miso-client/archive/d973db14834077670d22e3c86cf46646276038e1.tar.gz;
+    sha256 = "sha256:14n2gj8r7n42w1fbsbhl084wx750b8zfd7xsdc5jz5n596z5mw6y";
     # should match cabal.project
   };
 
