@@ -14,5 +14,5 @@ source-repository-package
 source-repository-package
   type: git
   location: https://github.com/haskell-miso/servant-miso-client
-  tag: d973db14834077670d22e3c86cf46646276038e1
+  tag: 33648695201f5e5b64a9bca143e4cb1545a394a3
 

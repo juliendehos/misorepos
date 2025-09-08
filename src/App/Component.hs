@@ -19,8 +19,6 @@ import Gitlab.Api
 import Gitlab.Repo as Repo
 import Gitlab.User as User
 
-import Language.Javascript.JSaddle (fromJSValUnchecked)   -- TODO
-
 -------------------------------------------------------------------------------
 -- component
 -------------------------------------------------------------------------------
@@ -37,8 +35,8 @@ mkComponent = component emptyModel updateModel viewModel
 baseUrl :: MisoString
 baseUrl = "https://gitlab.com"
 
-gitlabUsers :: Maybe MisoString -> (Response [User] -> Action) -> (Response JSVal -> Action) -> Transition Model Action
-gitlabRepos :: MisoString -> (Response [Repo] -> Action) -> (Response JSVal -> Action) -> Transition Model Action
+gitlabUsers :: Maybe MisoString -> (Response [User] -> Action) -> (Response MisoString -> Action) -> Transition Model Action
+gitlabRepos :: MisoString -> (Response [Repo] -> Action) -> (Response MisoString -> Action) -> Transition Model Action
 gitlabUsers :<|> gitlabRepos = toClient baseUrl (Proxy @MyComponent) (Proxy @GitlabRoutes)
 
 -------------------------------------------------------------------------------
@@ -46,12 +44,11 @@ gitlabUsers :<|> gitlabRepos = toClient baseUrl (Proxy @MyComponent) (Proxy @Git
 -------------------------------------------------------------------------------
 
 data Action
-  = ActionError MisoString
-  | ActionAskError (Response JSVal)
-  | ActionInputUsers MisoString
+  = ActionInputUsers MisoString
   | ActionAskGitlab
   | ActionSetGitlabUsers (Response [User])
   | ActionSetGitlabRepos (Response [Repo])
+  | ActionSetGitlabError (Response MisoString)
 
 -------------------------------------------------------------------------------
 -- update
@@ -59,12 +56,8 @@ data Action
 
 updateModel :: Action -> Transition Model Action
 
-updateModel (ActionAskError err) = do
-  let msg = ms $ show $ errorMessage err
-  io (ActionError . (\e -> msg <> " - " <> e) <$> fromJSValUnchecked (body err))
-
-updateModel (ActionError str) = do
-  modelError .= str
+updateModel (ActionSetGitlabError err) = do
+  modelError .= ms (show (errorMessage err) <> " - " <> show (body err))
   modelUsers .= []
   modelRepos .= []
 
@@ -74,8 +67,8 @@ updateModel (ActionInputUsers str) =
 updateModel ActionAskGitlab = do
   modelError .= ""
   inputUsers <- use modelInputUsers
-  gitlabUsers (Just inputUsers) ActionSetGitlabUsers ActionAskError
-  gitlabRepos inputUsers ActionSetGitlabRepos ActionAskError
+  gitlabUsers (Just inputUsers) ActionSetGitlabUsers ActionSetGitlabError
+  gitlabRepos inputUsers ActionSetGitlabRepos ActionSetGitlabError
 
 updateModel (ActionSetGitlabUsers respUsers) =
   modelUsers .= body respUsers
